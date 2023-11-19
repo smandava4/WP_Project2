@@ -1,0 +1,76 @@
+<div>
+ <label for="xSlider" style="width:100px; display:inline-block">
+ Scale x: <b id="xScale">1</b>
+ </label>
+ <input id="xSlider" type="range" min="0" max="3" step="0.1" value="1">
+</div>
+<div>
+ <label for="ySlider" style="width:100px; display:inline-block">
+ Scale y: <b id="yScale">1</b>
+ </label>
+ <input id="ySlider" type="range" min="0" max="3" step="0.1" value="1">
+</div>
+<canvas id="myCanvas" width="400" height="200" style="border: 1px solid gray"></canvas>
+<script>
+	
+  let xScaleElem = document.getElementById("xScale");
+  let xSlider = document.getElementById("xSlider");
+  xSlider.addEventListener("input", function() {
+    xScaleElem.innerHTML = xSlider.value;
+    drawSun();
+  });
+
+  let yScaleElem = document.getElementById("yScale");
+  let ySlider = document.getElementById("ySlider");
+  ySlider.addEventListener("input", function() {
+    yScaleElem.innerHTML = ySlider.value;
+    drawSun();
+  });
+
+  let canvas = document.getElementById("myCanvas");
+  let context = canvas.getContext("2d");
+  drawSun();
+
+  function drawSun() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.translate(130, 30); // Translate to center the sun initially
+
+    context.save(); // Save the current context settings
+
+    // Draw sunbeams (4 rotated squares)
+    for (let i = 0; i < 4; i++) {
+      context.translate(70, 70); // Move the origin to the center of the sun
+      context.rotate(Math.PI / 8);
+      context.translate(-70, -70);
+      context.fillStyle = "orange";
+      context.fillRect(20, 20, 100, 100);
+    }
+
+    // Draw interior circle
+    context.beginPath();
+    context.arc(70, 70, 50, 0, 2 * Math.PI);
+    context.fillStyle = "yellow";
+    context.fill();
+
+    context.restore(); // Restore previously saved settings
+
+    context.translate(70, 70); // Move the origin to the center of the sun
+    context.scale(xSlider.value, ySlider.value); // Scale around the center of the sun
+    context.translate(-70, -70); // Move the origin back to the upper-left corner of the sun
+
+    // Draw the scaled sun
+    context.beginPath();
+    for (let i = 0; i < 4; i++) {
+      context.translate(70, 70);
+      context.rotate(Math.PI / 8);
+      context.translate(-70, -70);
+      context.fillStyle = "orange";
+      context.fillRect(20, 20, 100, 100);
+    }
+    context.beginPath();
+    context.arc(70, 70, 50, 0, 2 * Math.PI);
+    context.fillStyle = "yellow";
+    context.fill();
+  }
+
+</script>
